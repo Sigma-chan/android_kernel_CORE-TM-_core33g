@@ -1,5 +1,5 @@
 # CPUfreq core
-obj-$(CONFIG_CPU_FREQ)			+= cpufreq.o
+obj-$(CONFIG_CPU_FREQ)			+= cpufreq.o cpufreq_governor.o
 # CPUfreq stats
 obj-$(CONFIG_CPU_FREQ_STAT)             += cpufreq_stats.o
 # CPUfreq limit API
@@ -13,7 +13,12 @@ obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVE)	+= cpufreq_conservative.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTERACTIVE)	+= cpufreq_interactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTELLIACTIVE) += cpufreq_intelliactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_SPRDEMAND)	+= cpufreq_sprdemand.o
+<<<<<<< HEAD
 obj-y					+= cpufreq_governor.o
+=======
+# obj-$(CONFIG_CPU_FREQ_GOV_COMMON)	+= cpufreq_governor.o
+obj-$(CONFIG_CPU_BOOST)			+= cpu-boost.o
+>>>>>>> highly_broken
 
 # CPUfreq cross-arch helpers
 obj-$(CONFIG_CPU_FREQ_TABLE)		+= freq_table.o

@@ -168,7 +168,7 @@ static struct cpufreq_table_data sc8830_cpufreq_table_data_cs = {
 		{0, 1200000},
 		{1, 1000000},
 		{2, SHARK_TDPLL_FREQUENCY},
-		{3, 600000},
+		{3, 384000},
 		{4, CPUFREQ_TABLE_END},
 	},
 	.vddarm_mv = {
@@ -214,17 +214,27 @@ static struct cpufreq_table_data sc8830_cpufreq_table_data_es = {
 	},
 };
 
+/* koquantam
+ * 0,075mV for each 200MHz
+ * The lowest voltage is 0,9mV
+ */
 static struct cpufreq_table_data sc8830t_cpufreq_table_data_es = {
 	.freq_tbl = {
 		{0, 1600000},
 		{1, 1400000},
 		{2, 1200000},
 		{3, 1000000},
+<<<<<<< HEAD
 		{4, SHARK_TDPLL_FREQUENCY},
 		{5, 600000},
 		{6, SHARK_TDPLL_FREQUENCY/2},
 		{7, 192000},
 		{8, CPUFREQ_TABLE_END},
+=======
+		{4, 600000},
+		{5, 200000},
+		{6, CPUFREQ_TABLE_END},
+>>>>>>> highly_broken
 	},
 	.vddarm_mv = {
 		1150000,
@@ -234,8 +244,11 @@ static struct cpufreq_table_data sc8830t_cpufreq_table_data_es = {
 		900000,
 		900000,
 		900000,
+<<<<<<< HEAD
 		900000,
 		900000,
+=======
+>>>>>>> highly_broken
 	},
 };
 
@@ -451,8 +464,6 @@ static int sprd_cpufreq_target(struct cpufreq_policy *policy,
 	struct cpufreq_frequency_table *table;
 	int max_freq = cpufreq_max_limit;
 	int min_freq = cpufreq_min_limit;
-	int cur_freq = 0;
-	unsigned long irq_flags;
 
 	/* delay 30s to enable dvfs&dynamic-hotplug,
          * except requirment from termal-cooling device
@@ -500,14 +511,15 @@ static unsigned int sprd_cpufreq_getspeed(unsigned int cpu)
 	return sprd_raw_get_cpufreq();
 }
 
-static void sprd_set_cpureq_limit(void)
+static void sprd_set_cpufreq_limit(void)
 {
 	int i;
-	struct cpufreq_frequency_table *tmp = sprd_cpufreq_conf->freq_tbl;
-	for (i = 0; (tmp[i].frequency != CPUFREQ_TABLE_END); i++) {
-		cpufreq_min_limit = min(tmp[i].frequency, cpufreq_min_limit);
-		cpufreq_max_limit = max(tmp[i].frequency, cpufreq_max_limit);
-	}
+	cpufreq_max_limit = sprd_cpufreq_conf->freq_tbl[0].frequency;
+	for (i = 1; i < FREQ_TABLE_SIZE; i++) {
+		if (sprd_cpufreq_conf->freq_tbl[i].frequency == CPUFREQ_TABLE_END)
+			break;
+       	}
+	cpufreq_min_limit = sprd_cpufreq_conf->freq_tbl[i-1].frequency;
 	pr_info("--xing-- %s max=%u min=%u\n", __func__, cpufreq_max_limit, cpufreq_min_limit);
 }
 
@@ -534,7 +546,7 @@ static int sprd_freq_table_init(void)
 		pr_err("%s error chip id\n", __func__);
 		return -EINVAL;
 	}
-	sprd_set_cpureq_limit();
+	sprd_set_cpufreq_limit();
 	return 0;
 }
 
@@ -858,15 +870,13 @@ static int __init sprd_cpufreq_modinit(void)
 		return PTR_ERR(sprd_cpufreq_conf->regulator);
 
 	/* set max voltage first */
-	/*
-	regulator_set_voltage(sprd_cpufreq_conf->regulator,
+	/*regulator_set_voltage(sprd_cpufreq_conf->regulator,
 		sprd_cpufreq_conf->vddarm_mv[0],
-		sprd_cpufreq_conf->vddarm_mv[0]);
-	*/
+		sprd_cpufreq_conf->vddarm_mv[0]);*/
 	clk_set_parent(sprd_cpufreq_conf->clk, sprd_cpufreq_conf->tdpllclk);
-	/*
-	* clk_set_rate(sprd_cpufreq_conf->mpllclk, (sprd_top_frequency * 1000));
-	*/
+	
+	//clk_set_rate(sprd_cpufreq_conf->mpllclk, (sprd_top_frequency * 1000));
+	
 	clk_set_parent(sprd_cpufreq_conf->clk, sprd_cpufreq_conf->mpllclk);
 	global_freqs.old = sprd_raw_get_cpufreq();
 

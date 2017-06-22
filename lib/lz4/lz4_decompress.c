@@ -140,8 +140,17 @@ static int lz4_uncompress(const char *source, char *dest, int osize)
 			/* Error: request to write beyond destination buffer */
 			if (cpy > oend)
 				goto _output_error;
+<<<<<<< HEAD
 			if ((ref + COPYLENGTH) > oend ||
 					(op + COPYLENGTH) > oend)
+=======
+#if LZ4_ARCH64
+			if ((ref + COPYLENGTH) > oend)
+#else
+			if ((ref + COPYLENGTH) > oend ||
+					(op + COPYLENGTH) > oend)
+#endif
+>>>>>>> highly_broken
 				goto _output_error;
 			LZ4_SECURECOPY(ref, op, (oend - COPYLENGTH));
 			while (op < cpy)
@@ -266,7 +275,17 @@ static int lz4_uncompress_unknownoutputsize(const char *source, char *dest,
 		if (cpy > oend - COPYLENGTH) {
 			if (cpy > oend)
 				goto _output_error; /* write outside of buf */
+<<<<<<< HEAD
 
+=======
+#if LZ4_ARCH64
+			if ((ref + COPYLENGTH) > oend)
+#else
+			if ((ref + COPYLENGTH) > oend ||
+					(op + COPYLENGTH) > oend)
+#endif
+				goto _output_error;
+>>>>>>> highly_broken
 			LZ4_SECURECOPY(ref, op, (oend - COPYLENGTH));
 			while (op < cpy)
 				*op++ = *ref++;

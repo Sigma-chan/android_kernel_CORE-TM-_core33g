@@ -323,24 +323,32 @@ config KSM
 	  See Documentation/vm/ksm.txt for more information: KSM is inactive
 	  until a program has madvised that an area is MADV_MERGEABLE, and
 	  root has set /sys/kernel/mm/ksm/run to 1 (if CONFIG_SYSFS is set).
-
-config OPTIMIZE_KSM
-	bool "Enable Optimize KSM"
+choice
+	prompt "Choose UKSM/KSM strategy"
+	default UKSM
 	depends on KSM
 	help
-	  Enable Optimize KSM
+	  This option allows to select a UKSM/KSM stragety.
 
-config ADAPTIVE_KSM
-	bool "Enable Adaptive KSM"
+config UKSM
+	bool "Ultra-KSM for page merging"
 	depends on KSM
 	help
-	  Enable Adaptive KSM
+	UKSM is inspired by the Linux kernel project \u2014 KSM(Kernel Same
+	page Merging), but with a fundamentally rewritten core algorithm. With
+	an advanced algorithm, UKSM now can transparently scans all anonymously
+	mapped user space applications with an significantly improved scan speed
+	and CPU efficiency. Since KVM is friendly to KSM, KVM can also benefit from
+	UKSM. Now UKSM has its first stable release and first real world enterprise user.
+	For more information, please goto its project page.
+	(www.kerneldedup.org)
 
-config KSM_ASSEMBLY_MEMCMP
-	bool "Assembly function used for memcmp in KSM"
+config KSM_LEGACY
+	bool "Legacy KSM implementation"
 	depends on KSM
 	help
-	  Using memcmp function this uses NEON only for KSM
+	The legacy KSM implementation from Redhat.
+endchoice
 
 config DEFAULT_MMAP_MIN_ADDR
         int "Low address space to protect from user allocation"
@@ -504,13 +512,32 @@ config FRONTSWAP
 
 	  If unsure, say Y to enable frontswap.
 
+<<<<<<< HEAD
 config ZPOOL
 	tristate "Common API for compressed memory storage"
 	default y
+=======
+config MEM_SOFT_DIRTY
+	bool "Track memory changes"
+	depends on CHECKPOINT_RESTORE && HAVE_ARCH_SOFT_DIRTY && PROC_FS
+	select PROC_PAGE_MONITOR
+	help
+	  This option enables memory changes tracking by introducing a
+	  soft-dirty bit on pte-s. This bit it set when someone writes
+	  into a page just as regular dirty bit, but unlike the latter
+	  it can be cleared by hands.
+
+	  See Documentation/vm/soft-dirty.txt for more details.
+
+config ZPOOL
+	tristate "Common API for compressed memory storage"
+	default n
+>>>>>>> highly_broken
 	help
 	  Compressed memory storage API.  This allows using either zbud or
 	  zsmalloc.
 
+<<<<<<< HEAD
 config ZSMALLOC
 	tristate "Memory allocator for compressed pages"
 	depends on MMU
@@ -538,6 +565,10 @@ config PGTABLE_MAPPING
 
 config ZBUD
 	tristate
+=======
+config ZBUD
+	tristate "Low density storage for compressed pages"
+>>>>>>> highly_broken
 	default n
 	help
 	  A special purpose allocator for storing compressed pages.
@@ -551,7 +582,10 @@ config ZSWAP
 	depends on FRONTSWAP && CRYPTO=y
 	select CRYPTO_LZO
 	select ZPOOL
+<<<<<<< HEAD
 	select ZBUD
+=======
+>>>>>>> highly_broken
 	default n
 	help
 	  A lightweight compressed cache for swap pages.  It takes
@@ -566,3 +600,42 @@ config ZSWAP
 	  interactions don't cause any known issues on simple memory setups,
 	  they have not be fully explored on the large set of potential
 	  configurations and workloads that exist.
+<<<<<<< HEAD
+=======
+
+config ZSMALLOC
+	bool "Memory allocator for compressed pages"
+	depends on MMU
+	default n
+	help
+	  zsmalloc is a slab-based memory allocator designed to store
+	  compressed RAM pages.  zsmalloc uses virtual memory mapping
+	  in order to reduce fragmentation.  However, this results in a
+	  non-standard allocator interface where a handle, not a pointer, is
+	  returned by an alloc().  This handle must be mapped in order to
+	  access the allocated space.
+
+config PGTABLE_MAPPING
+	bool "Use page table mapping to access object in zsmalloc"
+	depends on ZSMALLOC
+	help
+	  By default, zsmalloc uses a copy-based object mapping method to
+	  access allocations that span two pages. However, if a particular
+	  architecture (ex, ARM) performs VM mapping faster than copying,
+	  then you should select this. This causes zsmalloc to use page table
+	  mapping rather than copying for object mapping.
+
+	  You can check speed with zsmalloc benchmark[1].
+	  [1] https://github.com/spartacus06/zsmalloc
+
+config ZSMALLOC_STAT
+	bool "Export zsmalloc statistics"
+	depends on ZSMALLOC
+	select DEBUG_FS
+	help
+	  This option enables code in the zsmalloc to collect various
+	  statistics about whats happening in zsmalloc and exports that
+	  information to userspace via debugfs.
+	  If unsure, say N.
+
+>>>>>>> highly_broken

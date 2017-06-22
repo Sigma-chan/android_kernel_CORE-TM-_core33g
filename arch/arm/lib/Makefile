@@ -40,12 +40,18 @@ else
   lib-y	+= io-readsw-armv4.o io-writesw-armv4.o
 endif
 
-ifeq ($(CONFIG_KSM_ASSEMBLY_MEMCMP),y)
+#ifeq ($(CONFIG_KSM_ASSEMBLY_MEMCMP),y)
    lib-y	+= memcmpksm.o
-endif
+#endif
 
 lib-$(CONFIG_ARCH_RPC)		+= ecard.o io-acorn.o floppydma.o
 lib-$(CONFIG_ARCH_SHARK)	+= io-shark.o
 
 $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
 $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
+
+ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+  NEON_FLAGS			:= -mfloat-abi=hard -marm -mfpu=neon-vfpv4 -funsafe-math-optimizations
+  CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
+  obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
+endif

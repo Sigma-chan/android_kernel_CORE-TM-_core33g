@@ -2,6 +2,8 @@
 # Makefile for the linux memory manager.
 #
 
+CFLAGS_uksm.o := -Wno-implicit-function-declaration -Wno-discarded-qualifiers -Wno-int-conversion
+
 mmu-y			:= nommu.o
 mmu-$(CONFIG_MMU)	:= fremap.o highmem.o madvise.o memory.o mincore.o \
 			   mlock.o mmap.o mprotect.o mremap.o msync.o rmap.o \
@@ -40,7 +42,8 @@ obj-$(CONFIG_SPARSEMEM)	+= sparse.o
 obj-$(CONFIG_SPARSEMEM_VMEMMAP) += sparse-vmemmap.o
 obj-$(CONFIG_SLOB) += slob.o
 obj-$(CONFIG_MMU_NOTIFIER) += mmu_notifier.o
-obj-$(CONFIG_KSM) += ksm.o
+obj-$(CONFIG_KSM_LEGACY) += ksm.o
+obj-$(CONFIG_UKSM) += uksm.o
 obj-$(CONFIG_PAGE_POISONING) += debug-pagealloc.o
 obj-$(CONFIG_SLAB) += slab.o
 obj-$(CONFIG_SLUB) += slub.o
@@ -62,4 +65,10 @@ obj-$(CONFIG_ZSWAP)	+= zswap.o
 obj-$(CONFIG_ZPOOL)	+= zpool.o
 obj-$(CONFIG_ZSMALLOC)	+= zsmalloc.o
 obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
+<<<<<<< HEAD
 obj-$(CONFIG_ZBUD) += zbud.o
+=======
+obj-$(CONFIG_ZPOOL)	+= zpool.o
+obj-$(CONFIG_ZBUD)	+= zbud.o
+obj-$(CONFIG_ZSMALLOC)	+= zsmalloc.o
+>>>>>>> highly_broken

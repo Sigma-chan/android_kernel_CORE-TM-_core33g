@@ -105,7 +105,11 @@ static struct kernel_param_ops zswap_zpool_param_ops = {
 module_param_cb(zpool, &zswap_zpool_param_ops, &zswap_zpool_type, 0644);
 
 /* The maximum percentage of memory that the compressed pool can occupy */
+<<<<<<< HEAD
 static unsigned int zswap_max_pool_percent = 35;
+=======
+static unsigned int zswap_max_pool_percent = 95;
+>>>>>>> highly_broken
 module_param_named(max_pool_percent, zswap_max_pool_percent, uint, 0644);
 
 /*********************************

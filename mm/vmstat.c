@@ -747,6 +747,9 @@ const char * const vmstat_text[] = {
 #endif
 	"nr_anon_transparent_hugepages",
 	"nr_free_cma",
+#ifdef CONFIG_UKSM
+	"nr_uksm_zero_pages",
+#endif
 	"nr_dirty_threshold",
 	"nr_dirty_background_threshold",
 
@@ -1134,7 +1137,7 @@ static void zoneinfo_show_print(struct seq_file *m, pg_data_t *pgdat,
 		   "\n  all_unreclaimable: %u"
 		   "\n  start_pfn:         %lu"
 		   "\n  inactive_ratio:    %u",
-		   !zone_reclaimable(zone),
+		   zone->all_unreclaimable,
 		   zone->zone_start_pfn,
 		   zone->inactive_ratio);
 	seq_putc(m, '\n');
