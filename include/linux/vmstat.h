@@ -145,10 +145,7 @@ static inline unsigned long zone_page_state_snapshot(struct zone *zone,
 extern unsigned long global_reclaimable_pages(void);
 
 extern unsigned long global_reclaimable_pages(void);
-<<<<<<< HEAD
 extern unsigned long zone_reclaimable_pages(struct zone *zone);
-=======
->>>>>>> highly_broken
 
 #ifdef CONFIG_NUMA
 /*

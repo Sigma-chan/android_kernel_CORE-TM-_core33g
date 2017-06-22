@@ -404,7 +404,6 @@ struct page *read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
 	return retpage;
 }
 
-<<<<<<< HEAD
 static unsigned long swapin_nr_pages(unsigned long offset)
 {
 	static unsigned long prev_offset;
@@ -449,8 +448,6 @@ static unsigned long swapin_nr_pages(unsigned long offset)
 	return pages;
 }
 
-=======
->>>>>>> highly_broken
 /**
  * swapin_readahead - swap in pages in hope we need them soon
  * @entry: swap entry of this memory

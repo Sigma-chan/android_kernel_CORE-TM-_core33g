@@ -18,13 +18,10 @@
 #include "zcomp_lzo.h"
 #ifdef CONFIG_ZRAM_LZ4_COMPRESS
 #include "zcomp_lz4.h"
-<<<<<<< HEAD
 //#include "zcomp_lz4hc.h"
 #endif
 #ifdef CONFIG_ZRAM_ZLIB_COMPRESS
 #include "zcomp_zlib.h"
-=======
->>>>>>> highly_broken
 #endif
 
 /*
@@ -54,13 +51,10 @@ static struct zcomp_backend *backends[] = {
 	&zcomp_lzo,
 #ifdef CONFIG_ZRAM_LZ4_COMPRESS
 	&zcomp_lz4,
-<<<<<<< HEAD
 //	&zcomp_lz4hc,
 #endif
 #ifdef CONFIG_ZRAM_ZLIB_COMPRESS
 	&zcomp_zlib,
-=======
->>>>>>> highly_broken
 #endif
 	NULL
 };
@@ -90,11 +84,7 @@ static void zcomp_strm_free(struct zcomp *comp, struct zcomp_strm *zstrm)
  */
 static struct zcomp_strm *zcomp_strm_alloc(struct zcomp *comp)
 {
-<<<<<<< HEAD
 	struct zcomp_strm *zstrm = kmalloc(sizeof(*zstrm), GFP_KERNEL);
-=======
-	struct zcomp_strm *zstrm = kmalloc(sizeof(*zstrm), GFP_NOIO);
->>>>>>> highly_broken
 	if (!zstrm)
 		return NULL;
 
@@ -103,11 +93,7 @@ static struct zcomp_strm *zcomp_strm_alloc(struct zcomp *comp)
 	 * allocate 2 pages. 1 for compressed data, plus 1 extra for the
 	 * case when compressed size is larger than the original one
 	 */
-<<<<<<< HEAD
 	zstrm->buffer = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 1);
-=======
-	zstrm->buffer = (void *)__get_free_pages(GFP_NOIO | __GFP_ZERO, 1);
->>>>>>> highly_broken
 	if (!zstrm->private || !zstrm->buffer) {
 		zcomp_strm_free(comp, zstrm);
 		zstrm = NULL;
@@ -330,7 +316,6 @@ int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
 			zstrm->private);
 }
 
-<<<<<<< HEAD
 int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
 		const unsigned char *src,
 		size_t src_len, unsigned char *dst)
@@ -341,12 +326,6 @@ int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
 		private = zstrm->private;
 
 	return comp->backend->decompress(src, src_len, dst, private);
-=======
-int zcomp_decompress(struct zcomp *comp, const unsigned char *src,
-		size_t src_len, unsigned char *dst)
-{
-	return comp->backend->decompress(src, src_len, dst);
->>>>>>> highly_broken
 }
 
 void zcomp_destroy(struct zcomp *comp)
@@ -355,7 +334,6 @@ void zcomp_destroy(struct zcomp *comp)
 	kfree(comp);
 }
 
-<<<<<<< HEAD
 void *zcomp_decompress_begin(struct zcomp *comp)
 {
 	if (unlikely(comp->backend->flags() & ZCOMP_NEED_READ_ZSTRM))
@@ -369,8 +347,6 @@ void zcomp_decompress_end(struct zcomp *comp, void *private)
 	if (unlikely(private))
 		zcomp_strm_release(comp, private);
 }
-=======
->>>>>>> highly_broken
 /*
  * search available compressors for requested algorithm.
  * allocate new zcomp and initialize it. return compressing

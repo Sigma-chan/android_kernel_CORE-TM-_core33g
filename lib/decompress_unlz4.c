@@ -83,7 +83,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 	if (posp)
 		*posp = 0;
 
-<<<<<<< HEAD
 	if (fill)
 		fill(inp, 4);
 
@@ -91,22 +90,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 	if (chunksize == ARCHIVE_MAGICNUMBER) {
 		inp += 4;
 		size -= 4;
-=======
-	if (fill) {
-		size = fill(inp, 4);
-		if (size < 4) {
-			error("data corrupted");
-			goto exit_2;
-		}
-	}
-
-	chunksize = get_unaligned_le32(inp);
-	if (chunksize == ARCHIVE_MAGICNUMBER) {
-		if (!fill) {
-			inp += 4;
-			size -= 4;
-		}
->>>>>>> highly_broken
 	} else {
 		error("invalid header");
 		goto exit_2;
@@ -117,7 +100,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 
 	for (;;) {
 
-<<<<<<< HEAD
 		if (fill)
 			fill(inp, 4);
 
@@ -125,59 +107,22 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 		if (chunksize == ARCHIVE_MAGICNUMBER) {
 			inp += 4;
 			size -= 4;
-=======
-		if (fill) {
-			size = fill(inp, 4);
-			if (size == 0)
-				break;
-			if (size < 4) {
-				error("data corrupted");
-				goto exit_2;
-			}
-		}
-
-		chunksize = get_unaligned_le32(inp);
-		if (chunksize == ARCHIVE_MAGICNUMBER) {
-			if (!fill) {
-				inp += 4;
-				size -= 4;
-			}
->>>>>>> highly_broken
 			if (posp)
 				*posp += 4;
 			continue;
 		}
-<<<<<<< HEAD
 		inp += 4;
 		size -= 4;
-=======
-
->>>>>>> highly_broken
 
 		if (posp)
 			*posp += 4;
 
-<<<<<<< HEAD
 		if (fill) {
-=======
-		if (!fill) {
-			inp += 4;
-			size -= 4;
-		} else {
->>>>>>> highly_broken
 			if (chunksize > lz4_compressbound(uncomp_chunksize)) {
 				error("chunk length is longer than allocated");
 				goto exit_2;
 			}
-<<<<<<< HEAD
 			fill(inp, chunksize);
-=======
-			size = fill(inp, chunksize);
-			if (size < chunksize) {
-				error("data corrupted");
-				goto exit_2;
-			}
->>>>>>> highly_broken
 		}
 #ifdef PREBOOT
 		if (out_len >= uncomp_chunksize) {
@@ -196,10 +141,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 			goto exit_2;
 		}
 
-<<<<<<< HEAD
-=======
-		ret = -1;
->>>>>>> highly_broken
 		if (flush && flush(outp, dest_len) != dest_len)
 			goto exit_2;
 		if (output)
@@ -207,7 +148,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 		if (posp)
 			*posp += chunksize;
 
-<<<<<<< HEAD
 		size -= chunksize;
 
 		if (size == 0)
@@ -220,19 +160,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 		inp += chunksize;
 		if (fill)
 			inp = inp_start;
-=======
-		if (!fill) {
-			size -= chunksize;
-
-			if (size == 0)
-				break;
-			else if (size < 0) {
-				error("data corrupted");
-				goto exit_2;
-			}
-			inp += chunksize;
-		}
->>>>>>> highly_broken
 	}
 
 	ret = 0;

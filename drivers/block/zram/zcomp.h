@@ -12,11 +12,8 @@
 
 #include <linux/mutex.h>
 
-<<<<<<< HEAD
 #define ZCOMP_NEED_READ_ZSTRM	(1 << 0)
 
-=======
->>>>>>> highly_broken
 struct zcomp_strm {
 	/* compression/decompression buffer */
 	void *buffer;
@@ -36,13 +33,9 @@ struct zcomp_backend {
 			size_t *dst_len, void *private);
 
 	int (*decompress)(const unsigned char *src, size_t src_len,
-<<<<<<< HEAD
 			unsigned char *dst, void *private);
 
 	int (*flags)(void);
-=======
-			unsigned char *dst);
->>>>>>> highly_broken
 
 	void *(*create)(void);
 	void (*destroy)(void *private);
@@ -66,26 +59,18 @@ ssize_t zcomp_available_show(const char *comp, char *buf);
 struct zcomp *zcomp_create(const char *comp, int max_strm);
 void zcomp_destroy(struct zcomp *comp);
 
-<<<<<<< HEAD
 void *zcomp_decompress_begin(struct zcomp *comp);
 void zcomp_decompress_end(struct zcomp *comp, void *private);
 
-=======
->>>>>>> highly_broken
 struct zcomp_strm *zcomp_strm_find(struct zcomp *comp);
 void zcomp_strm_release(struct zcomp *comp, struct zcomp_strm *zstrm);
 
 int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
 		const unsigned char *src, size_t *dst_len);
 
-<<<<<<< HEAD
 int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
 		const unsigned char *src,
  		size_t src_len, unsigned char *dst);
-=======
-int zcomp_decompress(struct zcomp *comp, const unsigned char *src,
-		size_t src_len, unsigned char *dst);
->>>>>>> highly_broken
 
 bool zcomp_set_max_streams(struct zcomp *comp, int num_strm);
 #endif /* _ZCOMP_H_ */

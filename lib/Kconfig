@@ -222,10 +222,6 @@ config DECOMPRESS_LZO
 	select LZO_DECOMPRESS
 	tristate
 
-config DECOMPRESS_LZ4
-	select LZ4_DECOMPRESS
-	tristate
-
 config LZO_SOFT_ALGO
 	tristate "Soft LZO Algo"
 	select LZO_COMPRESS

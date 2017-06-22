@@ -5,7 +5,6 @@
 
 #ifdef __KERNEL__
 
-#include <linux/mmdebug.h>
 #include <linux/gfp.h>
 #include <linux/bug.h>
 #include <linux/list.h>
@@ -282,7 +281,7 @@ static inline int get_freepage_migratetype(struct page *page)
  */
 static inline int put_page_testzero(struct page *page)
 {
-	VM_BUG_ON_PAGE(atomic_read(&page->_count) == 0, page);
+	VM_BUG_ON(atomic_read(&page->_count) == 0);
 	return atomic_dec_and_test(&page->_count);
 }
 
@@ -331,7 +330,7 @@ extern void kvfree(const void *addr);
 static inline void compound_lock(struct page *page)
 {
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-	VM_BUG_ON_PAGE(PageSlab(page), page);
+	VM_BUG_ON(PageSlab(page));
 	bit_spin_lock(PG_compound_lock, &page->flags);
 #endif
 }
@@ -339,7 +338,7 @@ static inline void compound_lock(struct page *page)
 static inline void compound_unlock(struct page *page)
 {
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-	VM_BUG_ON_PAGE(PageSlab(page), page);
+	VM_BUG_ON(PageSlab(page));
 	bit_spin_unlock(PG_compound_lock, &page->flags);
 #endif
 }
@@ -406,8 +405,8 @@ static inline void get_huge_page_tail(struct page *page)
 	 * __split_huge_page_refcount() cannot run
 	 * from under us.
 	 */
-	VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
-	VM_BUG_ON_PAGE(atomic_read(&page->_count) != 0, page);
+	VM_BUG_ON(page_mapcount(page) < 0);
+	VM_BUG_ON(atomic_read(&page->_count) != 0);
 	atomic_inc(&page->_mapcount);
 }
 
@@ -422,7 +421,7 @@ static inline void get_page(struct page *page)
 	 * Getting a normal page or the head of a compound page
 	 * requires to already have an elevated page->_count.
 	 */
-	VM_BUG_ON_PAGE(atomic_read(&page->_count) <= 0, page);
+	VM_BUG_ON(atomic_read(&page->_count) <= 0);
 	atomic_inc(&page->_count);
 }
 
@@ -459,13 +458,13 @@ static inline int PageBuddy(struct page *page)
 
 static inline void __SetPageBuddy(struct page *page)
 {
-	VM_BUG_ON_PAGE(atomic_read(&page->_mapcount) != -1, page);
+	VM_BUG_ON(atomic_read(&page->_mapcount) != -1);
 	atomic_set(&page->_mapcount, PAGE_BUDDY_MAPCOUNT_VALUE);
 }
 
 static inline void __ClearPageBuddy(struct page *page)
 {
-	VM_BUG_ON_PAGE(!PageBuddy(page), page);
+	VM_BUG_ON(!PageBuddy(page));
 	atomic_set(&page->_mapcount, -1);
 }
 
@@ -1813,6 +1812,8 @@ extern int sysctl_memory_failure_recovery;
 extern void shake_page(struct page *p, int access);
 extern atomic_long_t num_poisoned_pages;
 extern int soft_offline_page(struct page *page, int flags);
+
+extern void dump_page(struct page *page);
 
 #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_HUGETLBFS)
 extern void clear_huge_page(struct page *page,
